@@ -20,8 +20,44 @@ var updateTime = 3000;
 // デブリ表示用レイヤー
 var debriLayer = new WorldWind.RenderableLayer("Debri");
 wwd.addLayer(debriLayer);
+var debriPlacemarkAttributes = new WorldWind.PlacemarkAttributes(null);
 
-var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
+// 自機表示用レイヤー
+var playerLayer = new WorldWind.RenderableLayer("Player");
+wwd.addLayer(playerLayer);
+
+var modelScene;
+var playerModel = {
+    displayName: 'player',
+    fileName: 'player.dae',
+    path: 'player',
+    initialScale: 500,
+    maxScale: 500,
+    xRotation: 100,
+    yRotation: 100,
+    useTexturePaths: true
+};
+
+var playerPosition = new WorldWind.Position(45, 45, 1000e3);
+var playerColladaLoader = new WorldWind.ColladaLoader(playerPosition);
+playerColladaLoader.init({dirPath: './models/'});
+playerColladaLoader.load(playerModel.fileName, function (scene) {
+    console.log('scene', scene);
+
+    if (scene) {
+        scene.scale = playerModel.initialScale;
+        scene.altitudeMode = WorldWind.ABSOLUTE;
+        scene.useTexturePaths = playerModel.useTexturePaths;
+
+        playerLayer.removeAllRenderables();
+        playerLayer.addRenderable(scene);
+
+        modelScene = scene;
+        modelScene.xRotation = playerModel.xRotation;
+        modelScene.yRotation = playerModel.yRotation;
+    }
+});
+
 
 var satVelocity = [];
 function getVelocity(satrec, time) {
@@ -138,44 +174,44 @@ function getGroundStations(groundStations) {
                     console.log(satData[j].OBJECT_NAME);
                     continue;
                 }
-                var higlightPlacemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+                var higlightPlacemarkAttributes = new WorldWind.PlacemarkAttributes(debriPlacemarkAttributes);
                 higlightPlacemarkAttributes.imageScale = 0.4;
 
                 var placemark = new WorldWind.Placemark(everyCurrentPosition[j]);
                 placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-                placemark.attributes = placemarkAttributes;
+                placemark.attributes = debriPlacemarkAttributes;
                 placemark.higlightAttributes = higlightPlacemarkAttributes;
                 debriLayer.addRenderable(placemark);
 
                 wwd.redraw();
             }
 
-            // 作成中：タイマーで 一定間隔で デブリの位置を更新
-            // ここが重くなっている？
-            var updatePositions = setInterval(function () {
-                for (var indx = 0; indx < satNum; indx += 1) {
-                    var timeSlide = 1;
-                    var now = new Date();
-                    var time = new Date(now.getTime() + timeSlide * 60000);
-                    try {
-                        var data = satData[indx];
-                        // 座標データ 現在の時刻に合わせて再計算
-                        var position = getPosition(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
-                        satVelocity[indx] = getVelocity(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
-                    } catch (err) {
-                        console.log(err + ' in updatePositions interval, sat ' + indx + satPac[indx].OBJECT_NAME);
-//                        continue;
-                    }
-                    try {
-                        everyCurrentPosition[indx].latitude = position.latitude;
-                        everyCurrentPosition[indx].longitude = position.longitude;
-                        everyCurrentPosition[indx].altitude = position.altitude;
-                    } catch (err) {
-                        //TODO: Handle deorbited sats
-                    }
-                }
-                wwd.redraw();
-            }, updateTime * 1.5);
+//             // 作成中：タイマーで 一定間隔で デブリの位置を更新
+//             // ここが重くなっている？
+//             var updatePositions = setInterval(function () {
+//                 for (var indx = 0; indx < satNum; indx += 1) {
+//                     var timeSlide = 1;
+//                     var now = new Date();
+//                     var time = new Date(now.getTime() + timeSlide * 60000);
+//                     try {
+//                         var data = satData[indx];
+//                         // 座標データ 現在の時刻に合わせて再計算
+//                         var position = getPosition(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
+//                         satVelocity[indx] = getVelocity(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
+//                     } catch (err) {
+//                         console.log(err + ' in updatePositions interval, sat ' + indx + satPac[indx].OBJECT_NAME);
+// //                        continue;
+//                     }
+//                     try {
+//                         everyCurrentPosition[indx].latitude = position.latitude;
+//                         everyCurrentPosition[indx].longitude = position.longitude;
+//                         everyCurrentPosition[indx].altitude = position.altitude;
+//                     } catch (err) {
+//                         //TODO: Handle deorbited sats
+//                     }
+//                 }
+//                 wwd.redraw();
+//             }, updateTime * 1.5);
         }
     }
 }
