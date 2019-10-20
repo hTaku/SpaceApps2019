@@ -58,6 +58,11 @@ playerColladaLoader.load(playerModel.fileName, function (scene) {
     }
 });
 
+// デブリの大きさ、画像など
+var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
+// placemarkAttributes.imageColor = WorldWind.Color.YELLOW;
+placemarkAttributes.imageScale = 0.3;
+placemarkAttributes.imageSource = "image/debris.png";
 
 var satVelocity = [];
 function getVelocity(satrec, time) {
