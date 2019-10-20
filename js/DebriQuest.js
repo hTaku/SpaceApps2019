@@ -63,7 +63,7 @@ function sanitizeSatellites(objectArray) {
         if(satrec === undefined) continue;
         var position = getPosition(satrec, time);
         var velocity = getVelocity(satrec, time);
-  
+
       } catch (err) {
         console.log(err);
        // console.log(objectArray[i].OBJECT_NAME +" is a faulty sat it is " + i);
@@ -72,9 +72,9 @@ function sanitizeSatellites(objectArray) {
         // i--;
         continue;
       }
-  
+
       if(typeof objectArray[i].LAUNCH_DATE === "undefined") continue;
-      
+
       resultArray.push(objectArray[i]);
     }
     updateTime = performance.now() - updateTime;
@@ -111,6 +111,7 @@ function getGroundStations(groundStations) {
 
         var satNum = satPac.length;
 
+        //初期表示
         renderSats(satPac);
         function renderSats(satData) {
             var everyCurrentPosition = [];
@@ -119,6 +120,7 @@ function getGroundStations(groundStations) {
                 var currentPositioin = null;
                 var time = new Date(now.getTime());
                 try {
+                    // 座標のデータ 更新
                     var velocity = getVelocity(satellite.twoline2satrec(satData[j].TLE_LINE1, satData[j].TLE_LINE2), time);
                     var position = getPosition(satellite.twoline2satrec(satData[j].TLE_LINE1, satData[j].TLE_LINE2), time);
                 } catch (err) {
@@ -148,6 +150,8 @@ function getGroundStations(groundStations) {
                 wwd.redraw();
             }
 
+            // 作成中：タイマーで 一定間隔で デブリの位置を更新
+            // ここが重くなっている？
             var updatePositions = setInterval(function () {
                 for (var indx = 0; indx < satNum; indx += 1) {
                     var timeSlide = 1;
@@ -155,6 +159,7 @@ function getGroundStations(groundStations) {
                     var time = new Date(now.getTime() + timeSlide * 60000);
                     try {
                         var data = satData[indx];
+                        // 座標データ 現在の時刻に合わせて再計算
                         var position = getPosition(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
                         satVelocity[indx] = getVelocity(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
                     } catch (err) {
@@ -170,7 +175,7 @@ function getGroundStations(groundStations) {
                     }
                 }
                 wwd.redraw();
-            }, updateTime * 1.5);  
-        }  
+            }, updateTime * 1.5);
+        }
     }
 }
