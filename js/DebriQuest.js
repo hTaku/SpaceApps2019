@@ -1,8 +1,26 @@
 "use strict";
 
+
+
+// WorldWind.configuration.setValue(INITIAL_LATITUDE, -45.0);
+// WorldWind.configuration.setValue(INITIAL_LATITUDE, -45.0);
 WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
 
 var wwd = new WorldWind.WorldWindow("canvasOne");
+
+console.log("Config")
+console.log(WorldWind.configuration);
+
+// default is 250000000
+WorldWind.configuration.gpuCacheSize = 250000000;
+
+// 起動時の初期位置
+wwd.navigator.lookAtLocation.latitude = 40;
+wwd.navigator.lookAtLocation.longitude = -110;
+wwd.navigator.range = 4000000; // 2 million meters above the ellipsoid
+wwd.navigator.tilt = 45;
+// Redraw the WorldWindow.
+wwd.redraw();
 
 // ベースとなるレイヤーの設定
 var layers = [
