@@ -42,15 +42,26 @@ var playerModel = {
     displayName: 'player',
     fileName: 'player.dae',
     path: 'player',
-    initialScale: 500,
-    maxScale: 500,
-    xRotation: 100,
+    initialScale: 1500,
+    maxScale: 1500,
+    xRotation: 0,
     yRotation: 180,
+    zRotation: 0,
     useTexturePaths: true
 };
+var playerPosition = {
+    latitude: 35,
+    longitude: -110,
+    altitude: 600e3
+};
+var centerPisition = {
+    latitude: 35,
+    longitude: -110,
+    altitude: 600e3
+};
 
-var playerPosition = new WorldWind.Position(35, -110, 1000e3);
-var playerColladaLoader = new WorldWind.ColladaLoader(playerPosition);
+var wwdPlayerPosition = new WorldWind.Position(playerPosition.latitude, playerPosition.longitude, playerPosition.altitude);
+var playerColladaLoader = new WorldWind.ColladaLoader(wwdPlayerPosition);
 playerColladaLoader.init({dirPath: './models/'});
 playerColladaLoader.load(playerModel.fileName, function (scene) {
     console.log('scene', scene);
@@ -66,6 +77,7 @@ playerColladaLoader.load(playerModel.fileName, function (scene) {
         modelScene = scene;
         modelScene.xRotation = playerModel.xRotation;
         modelScene.yRotation = playerModel.yRotation;
+        modelScene.zRotation = playerModel.zRotation;
     }
 });
 
@@ -73,6 +85,49 @@ playerColladaLoader.load(playerModel.fileName, function (scene) {
 // placemarkAttributes.imageColor = WorldWind.Color.YELLOW;
 debriPlacemarkAttributes.imageScale = 0.2;
 debriPlacemarkAttributes.imageSource = "image/debris.png";
+
+document.addEventListener("keydown", function(e){
+    switch(e.keyCode){
+        case 37:
+            console.log("key left: " + String(e.keyCode));
+            centerPisition.longitude -= 0.5;
+            playerPosition.longitude += 0.5;
+            break;
+        case 38:
+            console.log("key up: " + String(e.keyCode));
+            centerPisition.latitude += 0.5;
+            playerPosition.latitude -= 1.5;
+            break;
+        case 39:
+            console.log("key right: " + String(e.keyCode));
+            centerPisition.longitude += 0.5;
+            playerPosition.longitude -= 1.5;
+            break;
+        case 40:
+            console.log("key down: " + String(e.keyCode));
+            centerPisition.latitude -= 0.5;
+            playerPosition.latitude += 1.5;
+            break;
+        case 65:
+            console.log("key a: ") + String(e.keyCode);
+            centerPisition.altitude += 0.5;
+            playerPosition.altitude -= 1.5;
+            break;
+        case 70:
+            console.log("key f: ") + String(e.keyCode);
+            centerPisition.altitude -= 0.5;
+            playerPosition.altitude += 1.5;
+            break;
+        default:
+            console.log("key: " + String(e.keyCode));
+            break;
+    }
+    wwdPlayerPosition = new WorldWind.Position(centerPisition.latitude, centerPisition.longitude, centerPisition.altitude);
+    var placemark = new WorldWind.Placemark(wwdPlayerPosition);
+    playerLayer.addRenderable(placemark);
+
+    wwd.goTo(new WorldWind.Location(centerPisition.latitude, centerPisition.longitude));
+});
 
 var satVelocity = [];
 function getVelocity(satrec, time) {
