@@ -152,30 +152,30 @@ function getGroundStations(groundStations) {
 
             // 作成中：タイマーで 一定間隔で デブリの位置を更新
             // ここが重くなっている？
-            var updatePositions = setInterval(function () {
-                for (var indx = 0; indx < satNum; indx += 1) {
-                    var timeSlide = 1;
-                    var now = new Date();
-                    var time = new Date(now.getTime() + timeSlide * 60000);
-                    try {
-                        var data = satData[indx];
-                        // 座標データ 現在の時刻に合わせて再計算
-                        var position = getPosition(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
-                        satVelocity[indx] = getVelocity(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
-                    } catch (err) {
-                        console.log(err + ' in updatePositions interval, sat ' + indx + satPac[indx].OBJECT_NAME);
-//                        continue;
-                    }
-                    try {
-                        everyCurrentPosition[indx].latitude = position.latitude;
-                        everyCurrentPosition[indx].longitude = position.longitude;
-                        everyCurrentPosition[indx].altitude = position.altitude;
-                    } catch (err) {
-                        //TODO: Handle deorbited sats
-                    }
-                }
-                wwd.redraw();
-            }, updateTime * 1.5);
+//             var updatePositions = setInterval(function () {
+//                 for (var indx = 0; indx < satNum; indx += 1) {
+//                     var timeSlide = 1;
+//                     var now = new Date();
+//                     var time = new Date(now.getTime() + timeSlide * 60000);
+//                     try {
+//                         var data = satData[indx];
+//                         // 座標データ 現在の時刻に合わせて再計算
+//                         var position = getPosition(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
+//                         satVelocity[indx] = getVelocity(satellite.twoline2satrec(data.TLE_LINE1, data.TLE_LINE2), time);
+//                     } catch (err) {
+//                         console.log(err + ' in updatePositions interval, sat ' + indx + satPac[indx].OBJECT_NAME);
+// //                        continue;
+//                     }
+//                     try {
+//                         everyCurrentPosition[indx].latitude = position.latitude;
+//                         everyCurrentPosition[indx].longitude = position.longitude;
+//                         everyCurrentPosition[indx].altitude = position.altitude;
+//                     } catch (err) {
+//                         //TODO: Handle deorbited sats
+//                     }
+//                 }
+//                 wwd.redraw();
+//             }, updateTime * 1.5);
         }
     }
 }
