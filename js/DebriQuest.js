@@ -102,7 +102,7 @@ debriPlacemarkAttributes.imageScale = 0.2;
 debriPlacemarkAttributes.imageSource = "image/debris.png";
 
 var score = 0;
-var keydownCount = 0;
+var keydownCount = 1;
 document.addEventListener("keydown", function(e){
     switch(e.keyCode){
         case 37:
