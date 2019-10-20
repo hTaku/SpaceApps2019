@@ -16,6 +16,17 @@ for (var l = 0; l < layers.length; l++) {
     wwd.addLayer(layers[l].layer);
 }
 
+var viewControlsLayer = new WorldWind.ViewControlsLayer(wwd);
+// コントローラーの表示位置
+viewControlsLayer.alignment = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 0, WorldWind.OFFSET_FRACTION, 0.85);
+viewControlsLayer.placement = new WorldWind.Offset(WorldWind.OFFSET_FRACTION, 0, WorldWind.OFFSET_FRACTION, 0.85);
+//ボタンの表示・非表示
+viewControlsLayer.showHeadingControl = false;
+viewControlsLayer.showTiltControl = true;
+viewControlsLayer.showZoomControl = false;
+viewControlsLayer.showExaggerationControl = false;
+wwd.addLayer(viewControlsLayer);
+
 var updateTime = 3000;
 // デブリ表示用レイヤー
 var debriLayer = new WorldWind.RenderableLayer("Debri");
@@ -34,7 +45,7 @@ var playerModel = {
     initialScale: 500,
     maxScale: 500,
     xRotation: 100,
-    yRotation: 100,
+    yRotation: 180,
     useTexturePaths: true
 };
 
