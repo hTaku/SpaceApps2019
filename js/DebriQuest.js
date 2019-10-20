@@ -38,7 +38,7 @@ var playerModel = {
     useTexturePaths: true
 };
 
-var playerPosition = new WorldWind.Position(45, -100, 1000e3);
+var playerPosition = new WorldWind.Position(35, -110, 1000e3);
 var playerColladaLoader = new WorldWind.ColladaLoader(playerPosition);
 playerColladaLoader.init({dirPath: './models/'});
 playerColladaLoader.load(playerModel.fileName, function (scene) {
