@@ -38,7 +38,7 @@ var playerModel = {
     useTexturePaths: true
 };
 
-var playerPosition = new WorldWind.Position(45, 45, 1000e3);
+var playerPosition = new WorldWind.Position(45, -100, 1000e3);
 var playerColladaLoader = new WorldWind.ColladaLoader(playerPosition);
 playerColladaLoader.init({dirPath: './models/'});
 playerColladaLoader.load(playerModel.fileName, function (scene) {
@@ -186,8 +186,8 @@ function getGroundStations(groundStations) {
                 wwd.redraw();
             }
 
-//             // 作成中：タイマーで 一定間隔で デブリの位置を更新
-//             // ここが重くなっている？
+            // 作成中：タイマーで 一定間隔で デブリの位置を更新
+            // ここが重くなっている？
 //             var updatePositions = setInterval(function () {
 //                 for (var indx = 0; indx < satNum; indx += 1) {
 //                     var timeSlide = 1;
