@@ -72,7 +72,7 @@ var playerPosition = {
     longitude: -110,
     altitude: 600e3
 };
-var centerPisition = {
+var centerPosition = {
     latitude: 35,
     longitude: -110,
     altitude: 600e3
@@ -108,43 +108,49 @@ document.addEventListener("keydown", function(e){
     switch(e.keyCode){
         case 37:
             console.log("key left: " + String(e.keyCode));
-            centerPisition.longitude -= 0.5;
+            centerPosition.longitude -= 0.5;
             playerPosition.longitude += 0.5;
             break;
         case 38:
             console.log("key up: " + String(e.keyCode));
-            centerPisition.latitude += 0.5;
+            centerPosition.latitude += 0.5;
             playerPosition.latitude -= 1.5;
             break;
         case 39:
             console.log("key right: " + String(e.keyCode));
-            centerPisition.longitude += 0.5;
+            centerPosition.longitude += 0.5;
             playerPosition.longitude -= 1.5;
             break;
         case 40:
             console.log("key down: " + String(e.keyCode));
-            centerPisition.latitude -= 0.5;
+            centerPosition.latitude -= 0.5;
             playerPosition.latitude += 1.5;
             break;
         case 65:
             console.log("key a: ") + String(e.keyCode);
-            centerPisition.altitude += 0.5;
+            centerPosition.altitude += 0.5;
             playerPosition.altitude -= 1.5;
             break;
         case 70:
             console.log("key f: ") + String(e.keyCode);
-            centerPisition.altitude -= 0.5;
+            centerPosition.altitude -= 0.5;
             playerPosition.altitude += 1.5;
             break;
         default:
             console.log("key: " + String(e.keyCode));
             break;
     }
-    wwdPlayerPosition = new WorldWind.Position(centerPisition.latitude, centerPisition.longitude, centerPisition.altitude);
-    var placemark = new WorldWind.Placemark(wwdPlayerPosition);
-    playerLayer.addRenderable(placemark);
+    //wwdPlayerPosition = new WorldWind.Position(centerPosition.latitude, centerPosition.longitude, centerPosition.altitude);
+    wwdPlayerPosition.latitude = centerPosition.latitude;
+    wwdPlayerPosition.longitude = centerPosition.longitude;
 
-    wwd.goTo(new WorldWind.Location(centerPisition.latitude, centerPisition.longitude));
+    wwd.navigator.lookAtLocation.latitude = centerPosition.latitude;
+    wwd.navigator.lookAtLocation.longitude = centerPosition.longitude;
+    wwd.redraw();
+//    var placemark = new WorldWind.Placemark(wwdPlayerPosition);
+//    playerLayer.addRenderable(placemark);
+
+//    wwd.goTo(new WorldWind.Location(centerPosition.latitude, centerPosition.longitude));
 });
 
 var satVelocity = [];
